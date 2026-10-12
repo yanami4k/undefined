@@ -12,6 +12,7 @@ import argparse
 import math
 import random
 import sys
+from collections import Counter
 
 from meme6657.config import DATA_DIR
 from meme6657.jobs import read_jsonl, run_parallel, stable_hash, write_jsonl
@@ -20,6 +21,8 @@ from meme6657.prompts import load_cs_facts
 from meme6657.retrieval import load_aliases, load_blocklist, load_memes
 
 SYNTH_DIR = DATA_DIR / "synth"
+GOLD_PATH = DATA_DIR / "gold" / "labels.jsonl"
+ENTITIES_PER_JOB = 5  # 每个生成任务分到的实体数（每个任务写 per_job 条，同一实体最多两条）
 
 # (权重, 说明, 用户画像, 是否给弹幕当灵感, 是否给实体提示)
 CATEGORIES: dict[str, tuple[float, str, str, bool, bool]] = {
@@ -58,13 +61,22 @@ def build_jobs(total: int, per_job: int, rng: random.Random) -> list[dict]:
     pool = memes[:1500]
     aliases = load_aliases()
     cs_facts = load_cs_facts()
+    # 每个任务分几个不同的实体，同一个实体最多写两条；人工打标里已经被问得多的实体排到后面，轮流用
+    asked = Counter()
+    if GOLD_PATH.exists():
+        users = [g["user"].lower() for g in read_jsonl(GOLD_PATH)]
+        for e in aliases:
+            asked[e.canonical] = sum(any(t.lower() in u for t in e.terms if t) for u in users)
+    queue = sorted(aliases, key=lambda e: (asked[e.canonical], rng.random()))
     jobs = []
     for cat, (weight, desc, persona, use_memes, use_entity) in CATEGORIES.items():
         for j in range(math.ceil(total * weight / per_job)):
             extra = []
-            if use_entity and aliases:
-                e = rng.choice(aliases)
-                extra.append(f"围绕的实体：{e.canonical}（外号：{'、'.join(e.aliases[:5])}）。{e.note}")
+            if use_entity and queue:
+                picked = [queue.pop(0) for _ in range(min(ENTITIES_PER_JOB, len(queue)))]
+                queue += picked  # 用过的放回队尾
+                lines = [f"- {e.canonical}（外号：{'、'.join(e.aliases[:5])}）。{e.note}" for e in picked]
+                extra.append("围绕下面这些实体，每条消息挑其中一个，分布均匀，同一个实体最多写两条：\n" + "\n".join(lines))
             if cat in ("cs_match", "meme_ask_known") and cs_facts:
                 extra.append(cs_facts + "\n涉及选手的位置、所在战队、转会、比赛结果时，只能用上面事实表里的信息；表里没有的就别写具体事实。")
             if use_memes:

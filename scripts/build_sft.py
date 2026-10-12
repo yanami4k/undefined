@@ -5,7 +5,7 @@
 
 数据来源 data/gold/labels.jsonl，只取 good / wave：
 - 接梗（meme / template）：回复是原样的弹幕，不做任何清理；电波样本重复 --wave-weight 次加权
-- 正常回复（normal）：用当前清理规则再过一遍（去掉颜文字等），引用的弹幕片段原样保留
+- 正常回复（normal）：用当前清理规则再过一遍（去掉颜文字、结尾主动推话题的那句），引用的弹幕片段原样保留
 用户消息按线上推理的格式附 [参考梗]（同一个检索器）。接梗样本以 --inject 的概率把目标弹幕放进 [参考梗]，
 让学生既学会背梗，也学会从参考里原样取用；其余样本保持检索的自然结果。
 原样搬来的弹幕回复命中屏蔽词的丢弃（安全兜底）。
@@ -82,7 +82,7 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
-    from scripts.normal_replies import MemeIndex, problems, tidy_tics  # 正常回复的清理规则
+    from scripts.normal_replies import MemeIndex, problems, strip_followup, tidy_tics  # 正常回复的清理规则
 
     rng = random.Random(args.seed)
     retriever = Retriever.from_files()
@@ -102,7 +102,7 @@ def main() -> None:
         ctx = retriever.retrieve(user)
         if r["kind"] == "normal":
             memes = [m.text for m in retriever.search_memes(user, k=8) + retriever.search_memes(reply, k=8)]
-            reply = tidy_tics(user, reply, memes, keep=index.quotes(user, reply))
+            reply = strip_followup(tidy_tics(user, reply, memes, keep=index.quotes(user, reply)))
             no_persona += bool(problems(user, reply, memes, "help", index.quotes(user, reply)))
         elif rng.random() < args.inject:
             target = by_text.get(r.get("source", "").strip())

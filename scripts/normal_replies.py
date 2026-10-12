@@ -3,7 +3,7 @@
     python -m scripts.normal_replies --from round4 round5b --per-category 4 --name normal6
 
 取匹配阶段判定「不能整条用一句弹幕接」的用户消息（求助、闲聊、发泄、问梗……），
-让老师按风格卡和口味校准文件，用小萌妹的口吻回复。打标结果显示往自己的话里硬嵌梗大多是不懂梗义，
+让老师按风格卡和口味校准文件，用祥子的口吻回复。打标结果显示往自己的话里硬嵌梗大多是不懂梗义，
 所以只在现成句式或整句贴上时才嵌；反应库只给老师看（学生只看 [参考梗]），引用的弹幕片段记在 quotes 里。
 人设（自称祥子、口癖、长度、不用列表）由程序检查，不合格就打回重写。
 输出 data/reverse/<name>.jsonl，可以放进打标页审阅。
@@ -151,6 +151,8 @@ NORMAL_HINT = """---
 只有两种情况可以嵌：现成句式（「X 怎么你们了？是 A 了还是 B 了？」「我觉得 XXX 就不会 XXX」），或者反应库、[参考梗] 里有一句和这个情境整句贴上的。
 嵌的时候一个字不改，弹幕里的 emoji、「我」都原样保留；解说词、选手专属梗不拆开换人；不要自己编「看起来像梗的话」。
 「爆了」只用在敏感、激进的话题上；不要把用户的话换个人称复读回去；不要编主播的事。
+答完就收：结尾不要主动往下推话题（「告诉祥子你打哪个」「发来祥子帮你看看」「要不要祥子……」），那是 AI 助手腔，用户一追问还容易露馅；只有用户要帮忙却没给材料（没贴代码、没给原文）时才要材料。
+你就是丰川祥子本人：聊 MyGO / Ave Mujica 剧情时，剧里祥子的经历就是你自己的经历，用「祥子」当自己的事说，不用「她」把自己当别人讲；用户夸或骂丰川祥子就是在说你；其他角色从祥子的关系出发称呼（睦、素世、初华……）。
 
 祥子自己说话的部分：自称祥子，不说「我」；句尾口癖（喵 / desuwa）、打招呼用贵安，一条最多一处；
 不用颜文字，自己说的话不加 emoji，不用「～」；像聊天，一般一两句，求助时也别写成文章。
@@ -168,13 +170,44 @@ def _outside(reply: str, memes: list[str], quotes: list[str]) -> str:
     return reply
 
 
+# 结尾主动往下推话题：让用户补充信息、提出再帮忙
+FOLLOWUP = re.compile(r"(告诉|发给|发来|发过来|发我|贴给|贴出来|说说|说一下|讲讲).{0,10}祥子|祥子再?(帮你|陪你|给你)(看|捋|分析|改|找|研究|说|整理|推荐|细聊)|"
+                      r"你(打|玩|用|追|抽|是|在|更)(哪|什么)|要(详细|具体)|需要的话|有需要|(要不要|需不需要|要不)祥子|你(想|要)从哪|给(点|个)上下文")
+
+
+def _sentences(text: str) -> list[str]:
+    return [p for p in re.split(r"(?<=[。！？!?\n])", text) if p.strip()]
+
+
+def pushes_topic(reply: str) -> bool:
+    """最后一句在主动往下推话题。"""
+    s = _sentences(reply)
+    return bool(s) and bool(FOLLOWUP.search(s[-1]))
+
+
+def strip_followup(reply: str, min_rest: int = 25) -> str:
+    """前面已经答完、最后一句在推话题时，删掉这句。只有一句（多半是在要材料）或删完没了人设味的不动。"""
+    s = _sentences(reply)
+    if len(s) < 2 or not FOLLOWUP.search(s[-1]):
+        return reply
+    rest = "".join(s[:-1]).rstrip()
+    if len(rest) < min_rest or not ("祥子" in rest or re.search("喵|desuwa|贵安", rest)):
+        return reply
+    return rest
+
+
+SOFT_PUSH = ("结尾在主动往下推话题（让用户补充信息、提出再帮忙）：答完就收，删掉这句；"
+             "只有用户要帮忙却没给材料（没贴代码、没给原文）时，才可以要材料")
 SOFT_I = "出现了「我」：祥子自己说话时自称祥子；如果这个「我」在引用的弹幕或通用句式里（比如「我觉得 XXX 就不会 XXX」），原样保留不用改"
 
 
 def soft_problems(user: str, reply: str, memes: list[str], quotes: list[str] | None = None) -> list[str]:
     """只提醒一次的问题：程序判断不准（短句式里的「我」检测不出来是引用），提醒过后交给老师判断。"""
     outside = re.sub(r"「[^」]*」|“[^”]*”", "", _outside(reply, memes, quotes or []))  # 引号里替用户说的话不算自称
-    return [SOFT_I] if "我" in outside else []
+    issues = [SOFT_I] if "我" in outside else []
+    if pushes_topic(reply):
+        issues.append(SOFT_PUSH)
+    return issues
 
 
 def problems(user: str, reply: str, memes: list[str], category: str,
@@ -246,7 +279,7 @@ def main() -> None:
                                    {"role": "user", "content": feedback}]
         last = tries[-1]
         return {"id": r["id"], "category": r["category"], "user": r["user"], "user_content": user_content,
-                "reply": last["reply"], "raw_reply": last["raw"], "situation": last["situation"],
+                "reply": strip_followup(last["reply"]), "raw_reply": last["raw"], "situation": last["situation"],
                 "quotes": last["quotes"], "kind": "normal", "tries": len(tries),
                 "passed": not last["issues"], "issues": last["issues"]}
 

@@ -6,7 +6,8 @@
 
 整个反应库都给老师看（放在提示词前缀、顺序固定，可命中缓存），每条梗都带着它在人工打标里真实的成功用例和翻车用例，
 老师按「情境、动作」判断对不对得上，而不是看有没有共同的关键词。
-另外补几条按话题检索到的梗（标为未验证）。每条梗在一批里最多用 MAX_USES 次，防止套路化。
+另外补几条按话题检索到的梗（标为未验证）。同一个梗的不同写法算一族（见 Families），每族在一批里最多用 MAX_USES 次；
+人工打标里已经有 HISTORY_CAP 条以上的梗族不再配，标注留给新梗。
 需要明确答案的问题直接不接，走正常回答。
 """
 
@@ -24,13 +25,15 @@ from meme6657.config import DATA_DIR
 from meme6657.jobs import read_jsonl, run_parallel
 from meme6657.llm import LLM
 from meme6657.prompts import format_context, load_taste
-from meme6657.retrieval import Context, Retriever
+from meme6657.retrieval import Context, Retriever, bigrams
 
 OUT_DIR = DATA_DIR / "reverse"
 REACTIONS_PATH = DATA_DIR / "gold" / "reactions.json"
-MAX_USES = 3
+GOLD_PATH = DATA_DIR / "gold" / "labels.jsonl"
+MAX_USES = 3  # 同一族梗在一批里最多用几次
+HISTORY_CAP = 6  # 人工打标里已经有这么多条的梗族，新批次不再配（标注留给新梗，老梗要多出现靠情境复用）
 
-PREFIX = """场景：用户在和一个「说话软萌、开口却全是 6657 烂梗的小萌妹」人设的聊天 AI 一对一聊天，或者在 QQ 群里 @ 它。
+PREFIX = """场景：用户在和一个「丰川祥子本人，说话软萌、开口却全是 6657 烂梗」人设的聊天 AI 一对一聊天，或者在 QQ 群里 @ 它。
 这个 AI 像弹幕一样接话，用一句直播间的真弹幕原样接上。
 
 {taste}
@@ -67,14 +70,43 @@ def render_library(lib: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def retrieved(user: str, retriever: Retriever, lib_texts: set[str], usage: Counter, k: int = 5) -> list[str]:
+def retrieved(user: str, retriever: Retriever, lib_texts: set[str], exhausted, k: int = 5) -> list[str]:
     out = []
     for m in retriever.search_memes(user, k=k + 3):
-        if m.text not in lib_texts and usage[m.text] < MAX_USES and len(m.text) <= 120:
+        if m.text not in lib_texts and not exhausted(m.text) and len(m.text) <= 120:
             out.append(m.text)
         if len(out) >= k:
             break
     return out
+
+
+class Families:
+    """把同一个梗的不同写法归成一族，限次数时按族算。
+
+    命中黑话类外号（汗还是尿、爆了、黏……）的按外号归；否则和反应库里的梗二元组重合度超过一半的，归到那条梗；
+    都不是就自成一族。
+    """
+
+    def __init__(self, retriever: Retriever, lib_texts: list[str], threshold: float = 0.5):
+        self.retriever = retriever
+        self.reps = [(t, set(bigrams(t))) for t in lib_texts]
+        self.threshold = threshold
+        self.cache: dict[str, str] = {}
+
+    def __call__(self, text: str) -> str:
+        if text not in self.cache:
+            self.cache[text] = self._family(text)
+        return self.cache[text]
+
+    def _family(self, text: str) -> str:
+        terms = [e.canonical for e in self.retriever.match_aliases(text) if e.kind == "term"]
+        if terms:
+            return "黑话:" + terms[0]
+        grams = set(bigrams(text))
+        for rep, rg in self.reps:
+            if grams and rg and len(grams & rg) / len(grams | rg) >= self.threshold:
+                return rep
+        return text
 
 
 def is_echo(user: str, reply: str) -> bool:
@@ -104,21 +136,31 @@ def main() -> None:
     taste = load_taste()
     teacher = LLM("teacher")
     out_path = OUT_DIR / f"{args.name}.jsonl"
-    usage: Counter = Counter(r["source"] for r in read_jsonl(out_path) if r.get("source"))
+    lib_texts = {e["text"] for e in lib}
+    family = Families(retriever, [e["text"] for e in lib])
+    history = Counter(family(g["source"]) for g in read_jsonl(GOLD_PATH)
+                      if g.get("kind") == "meme" and g.get("source")) if GOLD_PATH.exists() else Counter()
+    usage: Counter = Counter(family(r["source"]) for r in read_jsonl(out_path) if r.get("source"))
     lock = threading.Lock()
 
-    lib_texts = {e["text"] for e in lib}
+    def exhausted(text: str) -> bool:
+        f = family(text)
+        return usage[f] >= MAX_USES or history[f] >= HISTORY_CAP
+
+    retired = sum(history[family(t)] >= HISTORY_CAP for t in lib_texts)
+    print(f"反应库 {len(lib)} 条，其中 {retired} 条所在的梗族已有 {HISTORY_CAP} 条以上标注，本批不再配")
     prefix = PREFIX.format(taste=taste, library=render_library(lib))
 
     def work(seed: dict) -> dict:
         msg = seed["message"]
-        extra_memes = retrieved(msg, retriever, lib_texts, usage)
+        with lock:
+            extra_memes = retrieved(msg, retriever, lib_texts, exhausted)
         extra = ""
         if extra_memes:
             listing = "\n".join(f"R{i}. {t}" for i, t in enumerate(extra_memes, 1))
             extra = "\n补充候选（按话题检索到，未经人工验证）：\n" + listing + "\n"
         with lock:
-            full = [f"L{i}" for i, e in enumerate(lib, 1) if usage[e["text"]] >= MAX_USES]
+            full = [f"L{i}" for i, e in enumerate(lib, 1) if exhausted(e["text"])]
         exhausted = ("\n这些编号本批已经用满，不要选：" + "、".join(full) + "\n") if full else ""
         notes = format_context(Context(aliases=retriever.match_aliases(msg)))
         notes_block = ("相关知识：\n" + notes + "\n") if notes else ""
@@ -136,10 +178,10 @@ def main() -> None:
             text, why = None, "（程序拦截：复读用户原话）" + why
         if text:
             with lock:
-                if usage[text] >= MAX_USES:
+                if exhausted(text):
                     text = None
                 else:
-                    usage[text] += 1
+                    usage[family(text)] += 1
         return {"id": seed["id"], "category": seed["category"], "user": msg,
                 "choice": choice if text else 0, "kind": "meme" if text else "",
                 "source": text or "", "reply": text or "", "verified": verified if text else False, "why": why}
