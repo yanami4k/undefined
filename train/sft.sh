@@ -3,10 +3,16 @@
 #   bash train/sft.sh
 #   MODEL=Qwen/Qwen3-4B-Instruct-2507 NPROC_PER_NODE=1 bash train/sft.sh   # 小模型试跑
 #
-# 显存不够时依次尝试：加 --deepspeed zero3；把 MAX_LENGTH 降到 2048；改成单进程多卡切分
-# （NPROC_PER_NODE=1 且 CUDA_VISIBLE_DEVICES=0,1，ms-swift 会按层把模型分到两张卡上）。
+# 显存不够时依次尝试：加 --deepspeed zero3（先 pip install deepspeed）；把 MAX_LENGTH 降到 2048；
+# 改成单进程多卡切分（NPROC_PER_NODE=1 且 CUDA_VISIBLE_DEVICES=0,1，ms-swift 会按层把模型分到两张卡上）。
 set -euo pipefail
 source "$(dirname "$0")/env.sh"
+
+# 没设 MODEL 时默认是 30B；新开的终端或 screen 里容易漏设，训到加载模型才报错，这里先查
+if [ ! -f "$MODEL_DIR/config.json" ]; then
+  echo "找不到基座模型 $MODEL_DIR（MODEL=$MODEL）。检查 MODEL 是否设对，或先运行 train/setup.sh 下载。" >&2
+  exit 1
+fi
 
 EPOCHS=${EPOCHS:-3}
 LR=${LR:-1e-4}
