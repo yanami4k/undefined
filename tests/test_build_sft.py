@@ -1,4 +1,4 @@
-from scripts.build_sft import cap_repeated_phrases
+from scripts.build_sft import cap_repeated_phrases, training_rows
 
 
 def row(text):
@@ -19,3 +19,10 @@ def test_cap_ignores_user_text():
                           {"role": "assistant", "content": f"不同回复{i}"}]} for i in range(6)]
     kept, _ = cap_repeated_phrases(rows, n=10, cap=2)
     assert len(kept) == 6
+
+
+def test_training_rows_keeps_eval_cards_out():
+    gold = [{"id": f"{kind}-{verdict}", "kind": kind, "verdict": verdict}
+            for kind in ("meme", "template", "normal", "eval") for verdict in ("good", "wave", "bad")]
+    kept = {r["id"] for r in training_rows(gold)}
+    assert kept == {f"{kind}-{verdict}" for kind in ("meme", "template", "normal") for verdict in ("good", "wave")}

@@ -3,7 +3,7 @@
     python -m scripts.sync_labels --labels <导出的 labels 目录>   # 先合并打标结果
     python -m scripts.build_sft
 
-数据来源 data/gold/labels.jsonl，只取 good / wave：
+数据来源 data/gold/labels.jsonl，只取 good / wave，且只取下面三种类型（评估卡片 eval 打完分也会进金标，但不能进训练集）：
 - 接梗（meme / template）：回复是原样的弹幕，不做任何清理；电波样本重复 --wave-weight 次加权
 - 正常回复（normal）：用当前清理规则再过一遍（去掉颜文字、结尾主动推话题的那句），引用的弹幕片段原样保留
 用户消息按线上推理的格式附 [参考梗]（同一个检索器）。接梗样本以 --inject 的概率把目标弹幕放进 [参考梗]，
@@ -29,6 +29,16 @@ from meme6657.retrieval import Context, Meme, Retriever, is_expired, load_blockl
 
 GOLD_PATH = DATA_DIR / "gold" / "labels.jsonl"
 SFT_DIR = DATA_DIR / "sft"
+TRAIN_KINDS = ("meme", "template", "normal")
+
+
+def training_rows(gold: list[dict]) -> list[dict]:
+    """金标里能当训练样本的：判为好 / 电波，且是训练用的类型。
+
+    评估卡片（kind=eval）是学生模型对固定留出消息的回复，进了训练集，之后的评估就不是留出的了。
+    用白名单而不是排除 eval，以后加了新类型的卡片也不会悄悄混进来。
+    """
+    return [r for r in gold if r["verdict"] in ("good", "wave") and r["kind"] in TRAIN_KINDS]
 
 
 def _phrases(row: dict, n: int) -> set[str]:
@@ -91,7 +101,7 @@ def main() -> None:
     blocklist = load_blocklist()
     expired = load_expired()
 
-    gold = [r for r in read_jsonl(GOLD_PATH) if r["verdict"] in ("good", "wave")]
+    gold = training_rows(read_jsonl(GOLD_PATH))
     samples, stats, dropped, no_persona = [], Counter(), [], 0
     for r in sorted(gold, key=lambda r: r["id"]):
         user, reply = r["user"].strip(), r["reply"].strip()
