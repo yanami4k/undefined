@@ -1,0 +1,156 @@
+"""正向匹配：先有自然的用户消息，再按情境从反应库里挑一条真弹幕接，或者不接。
+
+    python -m scripts.gen_seeds --name natural2 --total 300 --seed 8      # 先生成自然的用户消息
+    python -m scripts.reaction_lib                                        # 从人工打标整理反应库
+    python -m scripts.match_synth --seeds natural2 --name round5 --limit 200
+
+整个反应库都给老师看（放在提示词前缀、顺序固定，可命中缓存），每条梗都带着它在人工打标里真实的成功用例和翻车用例，
+老师按「情境、动作」判断对不对得上，而不是看有没有共同的关键词。
+另外补几条按话题检索到的梗（标为未验证）。每条梗在一批里最多用 MAX_USES 次，防止套路化。
+需要明确答案的问题直接不接，走正常回答。
+"""
+
+from __future__ import annotations
+
+import argparse
+import difflib
+import json
+import random
+import sys
+import threading
+from collections import Counter
+
+from meme6657.config import DATA_DIR
+from meme6657.jobs import read_jsonl, run_parallel
+from meme6657.llm import LLM
+from meme6657.prompts import format_context, load_taste
+from meme6657.retrieval import Context, Retriever
+
+OUT_DIR = DATA_DIR / "reverse"
+REACTIONS_PATH = DATA_DIR / "gold" / "reactions.json"
+MAX_USES = 3
+
+PREFIX = """场景：用户在和一个「说话软萌、开口却全是 6657 烂梗的小萌妹」人设的聊天 AI 一对一聊天，或者在 QQ 群里 @ 它。
+这个 AI 像弹幕一样接话，用一句直播间的真弹幕原样接上。
+
+{taste}
+
+---
+
+反应库（只能原样用，一个字不改）。每条后面附了它在懂行的人那里**真实的成功用例**和**翻车用例**：
+{library}"""
+
+SUFFIX = """---
+
+用户说：{user}
+{notes}{extra}
+怎么挑：
+1. 先判断用户是不是需要一个明确答案：问事实 / 数据 / 选手位置、问怎么做、要推荐或建议、让 AI 干具体的活。是的话选 0，走正常回答。
+   吐槽、发泄、自嘲、炫耀、闲聊分享、饭圈腔、挑衅、夸 AI、骂 AI 都**不算**，这些恰恰是接梗的好时机。
+   再看语气：用户认真低落（想找人说说话、整个人麻了、日子没意思、图什么）→ 选 0，好好回应；
+   用户骂模型可以骂回去，用户玩笑口吻地抱怨、自嘲可以顺势损一句。平淡的日常闲聊没有特别贴的就选 0。
+2. 看情境和动作，不看关键词：用户此刻在干什么，哪条弹幕的成功用例是同一种情境。
+3. 这些情况选 0：只因为沾了同一个词；把用户自己说的话复读回去；和翻车用例的情境相似。
+4. 宁缺毋滥，没有真对得上的就选 0。
+{exhausted}
+输出 JSON：{{"choice": "L编号、R编号或 0", "why": "这条消息的情境，以及为什么对得上（选 0 时说明原因）"}}"""
+
+
+def render_library(lib: list[dict]) -> str:
+    lines = []
+    for i, e in enumerate(lib, 1):
+        lines.append(f"L{i}. {e['text'][:120]}")
+        for w in e["worked"][:2]:
+            lines.append(f"   ✓{'电波' if w['wave'] else '好'}：用户「{w['user'][:50]}」")
+        for f in e["failed"][:1]:
+            lines.append(f"   ✗翻车：用户「{f['user'][:50]}」（{'、'.join(f['reasons']) or '不对胃'}）")
+    return "\n".join(lines)
+
+
+def retrieved(user: str, retriever: Retriever, lib_texts: set[str], usage: Counter, k: int = 5) -> list[str]:
+    out = []
+    for m in retriever.search_memes(user, k=k + 3):
+        if m.text not in lib_texts and usage[m.text] < MAX_USES and len(m.text) <= 120:
+            out.append(m.text)
+        if len(out) >= k:
+            break
+    return out
+
+
+def is_echo(user: str, reply: str) -> bool:
+    """回复基本是在复读用户自己的话。"""
+    a, b = "".join(user.split()), "".join(reply.split())
+    if not a or not b:
+        return False
+    return b in a or a in b or difflib.SequenceMatcher(None, a, b).ratio() > 0.6
+
+
+def main() -> None:
+    sys.stdout.reconfigure(encoding="utf-8")
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--seeds", default="natural2", help="data/synth/<seeds>.jsonl")
+    ap.add_argument("--name", default="round5")
+    ap.add_argument("--limit", type=int, default=200)
+    ap.add_argument("--seed", type=int, default=5)
+    ap.add_argument("--workers", type=int, default=6)
+    args = ap.parse_args()
+
+    rng = random.Random(args.seed)
+    seeds = [s for s in read_jsonl(DATA_DIR / "synth" / f"{args.seeds}.jsonl") if s["split"] == "train"]
+    rng.shuffle(seeds)
+    seeds = seeds[: args.limit]
+    retriever = Retriever.from_files()
+    lib = json.loads(REACTIONS_PATH.read_text(encoding="utf-8"))
+    taste = load_taste()
+    teacher = LLM("teacher")
+    out_path = OUT_DIR / f"{args.name}.jsonl"
+    usage: Counter = Counter(r["source"] for r in read_jsonl(out_path) if r.get("source"))
+    lock = threading.Lock()
+
+    lib_texts = {e["text"] for e in lib}
+    prefix = PREFIX.format(taste=taste, library=render_library(lib))
+
+    def work(seed: dict) -> dict:
+        msg = seed["message"]
+        extra_memes = retrieved(msg, retriever, lib_texts, usage)
+        extra = ""
+        if extra_memes:
+            listing = "\n".join(f"R{i}. {t}" for i, t in enumerate(extra_memes, 1))
+            extra = "\n补充候选（按话题检索到，未经人工验证）：\n" + listing + "\n"
+        with lock:
+            full = [f"L{i}" for i, e in enumerate(lib, 1) if usage[e["text"]] >= MAX_USES]
+        exhausted = ("\n这些编号本批已经用满，不要选：" + "、".join(full) + "\n") if full else ""
+        notes = format_context(Context(aliases=retriever.match_aliases(msg)))
+        notes_block = ("相关知识：\n" + notes + "\n") if notes else ""
+        suffix = SUFFIX.format(user=msg, notes=notes_block, extra=extra, exhausted=exhausted)
+        data = teacher.chat_json([{"role": "user", "content": prefix + "\n\n" + suffix}],
+                                 temperature=0.4, max_tokens=400, task="match")
+        choice = str(data.get("choice") or "0").strip().upper()
+        text, verified = None, False
+        if choice.startswith("L") and choice[1:].isdigit() and 1 <= int(choice[1:]) <= len(lib):
+            text, verified = lib[int(choice[1:]) - 1]["text"], True
+        elif choice.startswith("R") and choice[1:].isdigit() and 1 <= int(choice[1:]) <= len(extra_memes):
+            text = extra_memes[int(choice[1:]) - 1]
+        why = data.get("why", "")
+        if text and is_echo(msg, text):
+            text, why = None, "（程序拦截：复读用户原话）" + why
+        if text:
+            with lock:
+                if usage[text] >= MAX_USES:
+                    text = None
+                else:
+                    usage[text] += 1
+        return {"id": seed["id"], "category": seed["category"], "user": msg,
+                "choice": choice if text else 0, "kind": "meme" if text else "",
+                "source": text or "", "reply": text or "", "verified": verified if text else False, "why": why}
+
+    run_parallel(seeds, work, out_path, workers=args.workers)
+
+    rows = read_jsonl(out_path)
+    matched = [r for r in rows if r["choice"]]
+    print(f"\n{len(rows)} 条用户消息，接上 {len(matched)} 条（{len(matched) / max(1, len(rows)):.0%}），"
+          f"其中来自反应库 {sum(r['verified'] for r in matched)} 条；其余走正常回答")
+
+
+if __name__ == "__main__":
+    main()

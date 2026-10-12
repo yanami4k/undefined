@@ -1,0 +1,25 @@
+# 数据：烂梗原文来自 sb6657 社区，不要提交到公开仓库
+data/
+logs/
+outputs/
+output/
+
+# 密钥
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# 知识库构建的中间缓存和机器草稿（审核后的 aliases.candidates.json / glossary.todo.md 可以提交）
+kb/.*.jsonl
+kb/.templates_raw.txt
+kb/style_card.generated.md
+
+# 隐私：真实姓名等屏蔽片段只放本地
+kb/blocklist.local.txt
+# 机器草稿，含未审核的弹幕原文和真实姓名，不提交
+kb/glossary.todo.md

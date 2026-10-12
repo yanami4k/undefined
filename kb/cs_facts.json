@@ -1,0 +1,1013 @@
+{
+  "as_of": "2026-10-11",
+  "source": "Liquipedia",
+  "teams": {
+    "Team Vitality": [
+      {
+        "id": "apEX",
+        "country": "France",
+        "roles": [
+          "指挥"
+        ]
+      },
+      {
+        "id": "ZywOo",
+        "country": "France",
+        "roles": [
+          "狙击手",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "flameZ",
+        "country": "Israel",
+        "roles": [
+          "突破手"
+        ]
+      },
+      {
+        "id": "mezii",
+        "country": "uk",
+        "roles": []
+      },
+      {
+        "id": "ropz",
+        "country": "Estonia",
+        "roles": [
+          "自由人"
+        ]
+      },
+      {
+        "id": "XTQZZZ",
+        "country": "fr",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Team Spirit": [
+      {
+        "id": "magixx",
+        "country": "Russia",
+        "roles": [
+          "指挥"
+        ]
+      },
+      {
+        "id": "zont1x",
+        "country": "Ukraine",
+        "roles": [
+          "自由人"
+        ]
+      },
+      {
+        "id": "donk",
+        "country": "Russia",
+        "roles": [
+          "突破手"
+        ]
+      },
+      {
+        "id": "sh1ro",
+        "country": "Russia",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "tN1R",
+        "country": "Belarus",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "hally",
+        "country": "ru",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Team Falcons": [
+      {
+        "id": "NiKo",
+        "country": "Bosnia and Herzegovina",
+        "roles": [
+          "突破手"
+        ]
+      },
+      {
+        "id": "TeSeS",
+        "country": "Denmark",
+        "roles": [
+          "突破手"
+        ]
+      },
+      {
+        "id": "m0NESY",
+        "country": "Russia",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "kyousuke",
+        "country": "Russia",
+        "roles": [
+          "突破手"
+        ]
+      },
+      {
+        "id": "karrigan",
+        "country": "Denmark",
+        "roles": [
+          "指挥",
+          "突破手"
+        ]
+      },
+      {
+        "id": "zonic",
+        "country": "dk",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "MOUZ": [
+      {
+        "id": "torzsi",
+        "country": "Hungary",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "xertioN",
+        "country": "Israel",
+        "roles": [
+          "指挥",
+          "突破手"
+        ]
+      },
+      {
+        "id": "Spinx",
+        "country": "Israel",
+        "roles": [
+          "自由人"
+        ]
+      },
+      {
+        "id": "xelex",
+        "country": "Hungary",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "PR",
+        "country": "Czech Republic",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "sycrone",
+        "country": "dk",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "FaZe Clan": [
+      {
+        "id": "frozen",
+        "country": "sk",
+        "roles": []
+      },
+      {
+        "id": "jcobbb",
+        "country": "Poland",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "Twistzz",
+        "country": "ca",
+        "roles": [
+          "指挥"
+        ]
+      },
+      {
+        "id": "JBOEN",
+        "country": "Denmark",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "Neityu",
+        "country": "France",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "enkay J",
+        "country": "de",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Natus Vincere": [
+      {
+        "id": "b1t",
+        "country": "Ukraine",
+        "roles": [
+          "辅助"
+        ]
+      },
+      {
+        "id": "Aleksib",
+        "country": "Finland",
+        "roles": [
+          "指挥"
+        ]
+      },
+      {
+        "id": "iM",
+        "country": "Romania",
+        "roles": [
+          "突破手"
+        ]
+      },
+      {
+        "id": "w0nderful",
+        "country": "Ukraine",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "makazze",
+        "country": "Kosovo",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "B1ad3",
+        "country": "ua",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "G2 Esports": [
+      {
+        "id": "huNter-",
+        "country": "ba",
+        "roles": [
+          "指挥"
+        ]
+      },
+      {
+        "id": "HeavyGod",
+        "country": "Israel",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "matys",
+        "country": "Slovakia",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "NertZ",
+        "country": "Israel",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "r1nkle",
+        "country": "Ukraine",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "sAw",
+        "country": "fi",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "The MongolZ": [
+      {
+        "id": "bLitz",
+        "country": "Mongolia",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "Techno4K",
+        "country": "Mongolia",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "910",
+        "country": "Mongolia",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "cobrazera",
+        "country": "Mongolia",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "nin9",
+        "country": "Mongolia",
+        "roles": [
+          "指挥",
+          "狙击手"
+        ]
+      },
+      {
+        "id": "maaRaa",
+        "country": "mn",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Aurora Gaming": [
+      {
+        "id": "XANTARES",
+        "country": "Turkey",
+        "roles": [
+          "突破手"
+        ]
+      },
+      {
+        "id": "Wicadia",
+        "country": "Turkey",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "woxic",
+        "country": "tr",
+        "roles": []
+      },
+      {
+        "id": "Jimpphat",
+        "country": "Finland",
+        "roles": [
+          "辅助"
+        ]
+      },
+      {
+        "id": "kyxsan",
+        "country": "North Macedonia",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "ashhh",
+        "country": "uk",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Team Liquid": [
+      {
+        "id": "NAF",
+        "country": "Canada",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "EliGE",
+        "country": "United States",
+        "roles": [
+          "突破手"
+        ]
+      },
+      {
+        "id": "malbsMd",
+        "country": "Guatemala",
+        "roles": [
+          "突破手"
+        ]
+      },
+      {
+        "id": "Jorko",
+        "country": "Bulgaria",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "JT",
+        "country": "South Africa",
+        "roles": [
+          "指挥",
+          "突破手"
+        ]
+      },
+      {
+        "id": "flashie",
+        "country": "hu",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Astralis": [
+      {
+        "id": "Staehr",
+        "country": "Denmark",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "phzy",
+        "country": "Sweden",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "ryu",
+        "country": "Lithuania",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "NEO",
+        "country": "pl",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "FURIA Esports": [
+      {
+        "id": "yuurih",
+        "country": "Brazil",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "KSCERATO",
+        "country": "Brazil",
+        "roles": [
+          "自由人"
+        ]
+      },
+      {
+        "id": "FalleN",
+        "country": "Brazil",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "molodoy",
+        "country": "Kazakhstan",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "YEKINDAR",
+        "country": "lv",
+        "roles": []
+      },
+      {
+        "id": "sidde",
+        "country": "br",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "PaiN Gaming": [
+      {
+        "id": "biguzera",
+        "country": "Brazil",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "snow",
+        "country": "Brazil",
+        "roles": [
+          "辅助"
+        ]
+      },
+      {
+        "id": "saffee",
+        "country": "Brazil",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "Rkzinho",
+        "country": "br",
+        "roles": []
+      },
+      {
+        "id": "Tatu",
+        "country": "br",
+        "roles": []
+      },
+      {
+        "id": "rikz",
+        "country": "br",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "MIBR": [
+      {
+        "id": "insani",
+        "country": "Brazil",
+        "roles": [
+          "辅助"
+        ]
+      },
+      {
+        "id": "LNZ",
+        "country": "se",
+        "roles": [
+          "指挥"
+        ]
+      },
+      {
+        "id": "venomzera",
+        "country": "Brazil",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "nqz",
+        "country": "Brazil",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "tomaszin",
+        "country": "Argentina",
+        "roles": [
+          "自由人"
+        ]
+      },
+      {
+        "id": "LETN1",
+        "country": "rs",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "TyLoo": [
+      {
+        "id": "JamYoung",
+        "country": "cn",
+        "roles": []
+      },
+      {
+        "id": "Moseyuh",
+        "country": "China",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "Mercury",
+        "country": "China",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "Jee",
+        "country": "China",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "Zero",
+        "country": "China",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "zhokiNg",
+        "country": "cn",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Lynn Vision Gaming": [
+      {
+        "id": "westmelon",
+        "country": "cn",
+        "roles": [
+          "指挥"
+        ]
+      },
+      {
+        "id": "z4kr",
+        "country": "China",
+        "roles": [
+          "狙击手",
+          "突破手"
+        ]
+      },
+      {
+        "id": "EmiliaQAQ",
+        "country": "China",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "Starry",
+        "country": "cn",
+        "roles": []
+      },
+      {
+        "id": "C4LLM3SU3",
+        "country": "China",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "GUM",
+        "country": "cn",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "3DMAX": [
+      {
+        "id": "wasiNk",
+        "country": "fr",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Virtus.pro": [
+      {
+        "id": "tO0RO",
+        "country": "Russia",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "b1st",
+        "country": "Russia",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "mir",
+        "country": "ru",
+        "roles": [
+          "指挥"
+        ]
+      },
+      {
+        "id": "AquaRS",
+        "country": "Russia",
+        "roles": [
+          "步枪手",
+          "指挥"
+        ]
+      },
+      {
+        "id": "F0R3VER",
+        "country": "Kazakhstan",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "ProbLeM",
+        "country": "Russia",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "HEROIC": [
+      {
+        "id": "nilo",
+        "country": "Sweden",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "Chr1zN",
+        "country": "Denmark",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "susp",
+        "country": "Sweden",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "Martinez",
+        "country": "Spain",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "Brollan",
+        "country": "Sweden",
+        "roles": [
+          "指挥",
+          "突破手"
+        ]
+      },
+      {
+        "id": "Snappi",
+        "country": "dk",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Eternal Fire": [
+      {
+        "id": "jottAAA",
+        "country": "Turkey",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "regali",
+        "country": "ro",
+        "roles": []
+      },
+      {
+        "id": "MisteM",
+        "country": "South Africa",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "Kvem",
+        "country": "Ukraine",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "soulfly",
+        "country": "Turkey",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "Fabre",
+        "country": "tr",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "GamerLegion": [
+      {
+        "id": "Tauson",
+        "country": "dk",
+        "roles": []
+      },
+      {
+        "id": "REZ",
+        "country": "Sweden",
+        "roles": [
+          "步枪手",
+          "狙击手"
+        ]
+      },
+      {
+        "id": "hypex",
+        "country": "Poland",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "Snax",
+        "country": "Poland",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "FL4MUS",
+        "country": "ru",
+        "roles": []
+      },
+      {
+        "id": "imd",
+        "country": "pl",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "PARIVISION": [
+      {
+        "id": "Jame",
+        "country": "Russia",
+        "roles": [
+          "指挥",
+          "狙击手"
+        ]
+      },
+      {
+        "id": "xiELO",
+        "country": "Russia",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "zweih",
+        "country": "Russia",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "FL1T",
+        "country": "Russia",
+        "roles": [
+          "自由人"
+        ]
+      },
+      {
+        "id": "HObbit",
+        "country": "Kazakhstan",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "dastan",
+        "country": "kz",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "B8": [
+      {
+        "id": "npl",
+        "country": "Ukraine",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "esenthial",
+        "country": "Ukraine",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "alex666",
+        "country": "Ukraine",
+        "roles": [
+          "指挥",
+          "步枪手"
+        ]
+      },
+      {
+        "id": "kensizor",
+        "country": "Ukraine",
+        "roles": [
+          "步枪手"
+        ]
+      },
+      {
+        "id": "s1zzi",
+        "country": "Ukraine",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "Maddened",
+        "country": "xx",
+        "roles": [
+          "教练"
+        ]
+      }
+    ],
+    "Legacy": [
+      {
+        "id": "latto",
+        "country": "Brazil",
+        "roles": [
+          "步枪手",
+          "狙击手"
+        ]
+      },
+      {
+        "id": "dumau",
+        "country": "Brazil",
+        "roles": [
+          "步枪手",
+          "狙击手"
+        ]
+      },
+      {
+        "id": "n1ssim",
+        "country": "br",
+        "roles": []
+      },
+      {
+        "id": "arT",
+        "country": "Brazil",
+        "roles": [
+          "指挥",
+          "突破手"
+        ]
+      },
+      {
+        "id": "try",
+        "country": "Argentina",
+        "roles": [
+          "狙击手"
+        ]
+      },
+      {
+        "id": "adr",
+        "country": "Brazil",
+        "roles": [
+          "教练"
+        ]
+      }
+    ]
+  }
+}

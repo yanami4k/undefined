@@ -1,0 +1,237 @@
+<title>6657 口味打标</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* 布局：单卡片居中，判定按钮固定在底部，像在弹幕区给一条回复打分 */
+:root {
+  --bg: #f3f2ef; --panel: #ffffff; --fg: #1d1c1a; --muted: #6f6b64; --line: #e2dfd8;
+  --accent: #e8590c; --good: #2f9e44; --bad: #c92a2a; --wave: #7048e8; --chip: #f1eee8;
+  --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #16151a; --panel: #201f26; --fg: #ecebf0; --muted: #9b98a6; --line: #312f39;
+  --accent: #ff8a3d; --good: #51cf66; --bad: #ff6b6b; --wave: #9775fa; --chip: #2a2832; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #16151a; --panel: #201f26; --fg: #ecebf0; --muted: #9b98a6; --line: #312f39;
+  --accent: #ff8a3d; --good: #51cf66; --bad: #ff6b6b; --wave: #9775fa; --chip: #2a2832; color-scheme: dark }
+
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 640px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 200px; display: grid; gap: 16px; }
+
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+h1 { font-size: 17px; font-weight: 700; margin: 0; letter-spacing: .02em; }
+.stats { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; display: flex; gap: 12px; flex-wrap: wrap; }
+.stats b { font-weight: 500; }
+.stats .g { color: var(--good); } .stats .b { color: var(--bad); } .stats .w { color: var(--wave); }
+.bar { height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 14px; min-width: 0; }
+.label { font-size: 11.5px; color: var(--muted); letter-spacing: .08em; }
+.user { display: grid; gap: 4px; }
+.user p { margin: 0; font-size: 15px; }
+.reply { display: grid; gap: 6px; }
+.reply p { margin: 0; font-size: 19px; font-weight: 500; line-height: 1.55; word-break: break-word; border-left: 3px solid var(--accent); padding-left: 12px; }
+.source { font-size: 12.5px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; word-break: break-word; }
+.source span { font-family: var(--font-mono); font-size: 11px; margin-right: 6px; }
+
+.reasons { display: flex; flex-wrap: wrap; gap: 8px; }
+.reasons[hidden] { display: none; }
+.chip { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--chip); color: var(--fg); cursor: pointer; }
+.chip kbd, .btn kbd { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-left: 6px; }
+.chip.on { border-color: var(--bad); color: var(--bad); }
+.chip.next { border-style: dashed; }
+
+.dock { position: fixed; left: 0; right: 0; bottom: 0; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px);
+  border-top: 1px solid var(--line); padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
+.dock .row { max-width: 640px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.dock .row2 { max-width: 640px; margin: 8px auto 0; display: flex; justify-content: space-between; gap: 10px; }
+.btn { font: inherit; font-weight: 700; font-size: 16px; padding: 14px 8px; border-radius: 12px; border: 2px solid transparent; cursor: pointer; color: #fff; }
+.btn.good { background: var(--good); } .btn.bad { background: var(--bad); } .btn.wave { background: var(--wave); }
+.btn kbd { color: rgba(255,255,255,.75); }
+.ghost { font: inherit; font-size: 13px; background: none; border: none; color: var(--muted); cursor: pointer; padding: 6px 4px; }
+.ghost:disabled { opacity: .4; cursor: default; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.empty { text-align: center; color: var(--muted); padding: 48px 12px; display: grid; gap: 8px; }
+.empty strong { color: var(--fg); font-size: 16px; }
+.toast { position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); background: var(--fg); color: var(--bg);
+  font-size: 13px; padding: 6px 14px; border-radius: 999px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.toast.show { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .bar > i, .toast { transition: none; } }
+@media (max-width: 420px) { .reply p { font-size: 17px; } .btn { font-size: 15px; } .btn kbd { display: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>6657 口味打标</h1>
+    <div class="stats" id="stats">连接中…</div>
+  </header>
+  <div class="bar"><i id="progress"></i></div>
+
+  <section id="stage">
+    <div class="empty"><strong>正在打开存储…</strong><span>卡片由 Claude 放进来，打开后按 1 / 2 / 3 判定。</span></div>
+  </section>
+</div>
+
+<div class="dock" id="dock" hidden>
+  <div class="row">
+    <button class="btn good" id="b-good" type="button">好<kbd>1</kbd></button>
+    <button class="btn bad" id="b-bad" type="button">不好<kbd>2</kbd></button>
+    <button class="btn wave" id="b-wave" type="button">电波加分<kbd>3</kbd></button>
+  </div>
+  <div class="row2">
+    <button class="ghost" id="b-undo" type="button" disabled>← 撤销上一张（Backspace）</button>
+    <button class="ghost" id="b-skip" type="button">跳过（空格）→</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const REASONS = [
+  ["仿造梗感", "q"], ["不懂梗义", "w"], ["通用段子", "e"], ["硬扔无关", "r"], ["照抄套路", "t"], ["太长加戏", "y"],
+];
+const $ = (id) => document.getElementById(id);
+let db = null, cards = [], labels = new Map(), current = null, pendingBad = null, history = [], skipped = new Set();
+
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 1200); }
+
+function nextCard() {
+  return cards.find((c) => !labels.has(c.id) && !skipped.has(c.id)) || cards.find((c) => !labels.has(c.id)) || null;
+}
+
+function renderStats() {
+  const vals = [...labels.values()];
+  const n = (v) => vals.filter((l) => l.verdict === v).length;
+  const done = vals.filter((l) => l.verdict !== "skip").length;
+  $("stats").innerHTML = `<span><b>${done}</b> / ${cards.length}</span><span class="g">好 ${n("good")}</span><span class="b">不好 ${n("bad")}</span><span class="w">电波 ${n("wave")}</span>`;
+  $("progress").style.width = cards.length ? `${(100 * labels.size) / cards.length}%` : "0";
+  $("b-undo").disabled = history.length === 0;
+}
+
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+function render() {
+  renderStats();
+  const stage = $("stage");
+  stage.replaceChildren();
+  if (!db) return;
+  if (!cards.length) {
+    const e = el("div", "empty"); e.append(el("strong", null, "还没有卡片"), el("span", null, "让 Claude 把一批候选放进来，这里会自动出现。"));
+    stage.append(e); $("dock").hidden = true; return;
+  }
+  current = pendingBad ? cards.find((c) => c.id === pendingBad) : nextCard();
+  if (!current) {
+    const e = el("div", "empty"); e.append(el("strong", null, "这一批打完了 🎉"), el("span", null, "回到对话里告诉 Claude 一声，它会读取结果。"));
+    stage.append(e); $("dock").hidden = true; return;
+  }
+  $("dock").hidden = false;
+  const card = el("article", "card");
+  const u = el("div", "user"); u.append(el("div", "label", "用户说"), el("p", null, current.user || ""));
+  const r = el("div", "reply"); r.append(el("div", "label", "它接"), el("p", null, current.reply || ""));
+  card.append(u, r);
+  if (current.source) {
+    const s = el("div", "source"); s.append(el("span", null, current.kind === "template" ? "句式" : "原弹幕"), document.createTextNode(current.source));
+    card.append(s);
+  }
+  const reasons = el("div", "reasons"); reasons.hidden = !pendingBad;
+  if (pendingBad) {
+    const chosen = new Set((labels.get(current.id) || {}).reasons || []);
+    for (const [name, key] of REASONS) {
+      const b = el("button", "chip" + (chosen.has(name) ? " on" : ""), name); b.type = "button";
+      const k = el("kbd", null, key.toUpperCase()); b.append(k);
+      b.addEventListener("click", () => toggleReason(name));
+      reasons.append(b);
+    }
+    const next = el("button", "chip next", "下一张"); next.type = "button"; next.append(el("kbd", null, "Enter"));
+    next.addEventListener("click", finishBad);
+    reasons.append(next);
+  }
+  card.append(reasons);
+  stage.append(card);
+}
+
+async function save(id, body) {
+  try { await db.doc("labels/" + id).set(body); }
+  catch (e) { toast(e && e.code === "invalid_argument" ? "没有写入权限" : "保存失败，再点一次"); throw e; }
+}
+
+async function judge(verdict) {
+  if (!current || !db) return;
+  if (pendingBad && verdict !== "bad") await finishBad();
+  const id = current.id;
+  const body = { verdict, reasons: [], at: new Date().toISOString() };
+  labels.set(id, body); history.push(id); skipped.delete(id);
+  if (verdict === "bad") pendingBad = id;
+  render();
+  await save(id, body).catch(() => {});
+  if (verdict !== "bad") toast(verdict === "good" ? "好" : verdict === "wave" ? "电波加分" : "已跳过");
+}
+
+async function toggleReason(name) {
+  if (!pendingBad) return;
+  const l = { ...(labels.get(pendingBad) || { verdict: "bad" }) };
+  const set = new Set(l.reasons || []);
+  set.has(name) ? set.delete(name) : set.add(name);
+  l.reasons = [...set];
+  labels.set(pendingBad, l);
+  render();
+  await save(pendingBad, l).catch(() => {});
+}
+
+async function finishBad() { pendingBad = null; render(); }
+
+function skip() {
+  if (!current) return;
+  if (pendingBad) { finishBad(); return; }
+  skipped.add(current.id); render();
+}
+
+async function undo() {
+  const id = history.pop(); if (!id || !db) return;
+  pendingBad = null; labels.delete(id); skipped.delete(id);
+  cards = [cards.find((c) => c.id === id), ...cards.filter((c) => c.id !== id)].filter(Boolean);
+  render();
+  try { await db.doc("labels/" + id).delete(); } catch (e) { toast("撤销没保存上"); }
+}
+
+$("b-good").addEventListener("click", () => judge("good"));
+$("b-bad").addEventListener("click", () => judge("bad"));
+$("b-wave").addEventListener("click", () => judge("wave"));
+$("b-skip").addEventListener("click", skip);
+$("b-undo").addEventListener("click", undo);
+document.addEventListener("keydown", (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === "1") judge("good");
+  else if (k === "2") judge("bad");
+  else if (k === "3") judge("wave");
+  else if (k === " ") { e.preventDefault(); skip(); }
+  else if (k === "backspace") { e.preventDefault(); undo(); }
+  else if (k === "enter" && pendingBad) finishBad();
+  else if (pendingBad) { const r = REASONS.find(([, key]) => key === k); if (r) toggleReason(r[0]); }
+});
+
+(async () => {
+  db = window.claude ? await window.claude.use("db") : null;
+  if (!db) {
+    $("stats").textContent = "存储不可用";
+    $("stage").replaceChildren(Object.assign(el("div", "empty"), { innerHTML: "<strong>打不开存储</strong><span>在 claude.ai 里登录后打开这个页面，打标结果才能保存。</span>" }));
+    return;
+  }
+  const order = (d) => (typeof d.order === "number" ? d.order : 1e9);
+  db.collection("cards").onSnapshot((snap) => {
+    const ordered = snap.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => order(a) - order(b));
+    // 撤销时被提到最前的卡保持在前面
+    const front = history.length && cards[0] && !labels.has(cards[0].id) ? cards[0].id : null;
+    cards = front ? [ordered.find((c) => c.id === front), ...ordered.filter((c) => c.id !== front)].filter(Boolean) : ordered;
+    render();
+  }, () => toast("卡片读取中断，刷新页面试试"));
+  db.collection("labels").onSnapshot((snap) => {
+    labels = new Map(snap.docs.map((d) => [d.id, d.data()]));
+    render();
+  }, () => toast("结果读取中断，刷新页面试试"));
+})();
+</script>

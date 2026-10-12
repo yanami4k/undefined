@@ -1,0 +1,415 @@
+[
+  {
+    "canonical": "NiKo",
+    "aliases": [
+      "尼尼",
+      "老尼",
+      "大虾",
+      "虾哥",
+      "软脚虾",
+      "🦐",
+      "虾钳"
+    ],
+    "kind": "player",
+    "note": "波黑籍 CS 选手，现效力 Falcons，国内人气极高。「虾」系外号源自「软脚虾」（大场面容易发挥失常）：起点是 2018 波士顿 Major 决赛，炼狱小镇 B 点三箱被 Stewie2k 守住关键一分，之后一泻千里、与冠军失之交臂，此后多次 Major 决赛失利。他反过来打赢强队叫「虾钳反夹」。语气是又爱又恨的调侃。注意：「逮虾户」不是他，是专赢他的对手。",
+    "tags": [
+      "NiKo"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "逮虾户",
+    "aliases": [
+      "捕虾队",
+      "Déjà vu",
+      "deja vu"
+    ],
+    "kind": "term",
+    "note": "字面是「逮虾的人家」，指经常战胜 NiKo 所在战队的战队或选手（虾 = NiKo），同时谐音 Déjà vu（又是这个熟悉的结局）。sb6657「超级逮虾户战报」：对位击杀比 NiKo 多 3 个以上记「鲜虾点数」（吃到虾了），还有「捕虾队评级」。",
+    "tags": [
+      "NiKo"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "Twistzz",
+    "aliases": [
+      "总监",
+      "发型总监",
+      "宫监",
+      "宫监手",
+      "开宫",
+      "🏹",
+      "批监",
+      "披监",
+      "强肩",
+      "忒丝特ZZ"
+    ],
+    "kind": "player",
+    "note": "加拿大籍 CS 选手，现效力 FaZe Clan。「总监」= 发型总监，因为他爱做发型；「宫」= 宫斗（战队内部不和、互相挤兑）：2025 年 2 月 7 日 IEM 卡托维兹期间，Liquid 前教练 zews 爆料队员离开都因为 Twistzz 挑剔、对管理层不满，说他从不爱 Liquid、想去 Vitality。当晚 6657 弹幕对他的调侃升级成攻击，玩机器批评观众后突然下播，被认为偏袒 Twistzz（「孝」），随后就是「登山」。宫 + 总监 = 宫监，再谐音成弓箭：「宫监手！准备放监！」= 弓箭手准备放箭，「开宫」= 开弓，🏹 成了他的符号。状态前缀：批监 / 披监 = 当前发挥糟糕的总监（p 前缀，「披肩」是借现成词），强肩 = 当前发挥出色的总监（同时是粗俗谐音，不要主动用）。",
+    "tags": [
+      "Twistzz"
+    ],
+    "exclude": [
+      "我们总监",
+      "公司总监",
+      "财务总监",
+      "销售总监",
+      "创意总监",
+      "艺术总监",
+      "技术总监",
+      "总监助理"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "karrigan",
+    "aliases": [
+      "大表哥"
+    ],
+    "kind": "player",
+    "note": "丹麦籍 CS 指挥选手，现效力 Falcons。因为长得像早期职业选手 JW（「小表哥」）而被叫「大表哥」。",
+    "tags": [],
+    "exclude": [
+      "我大表哥",
+      "我家大表哥",
+      "我的大表哥",
+      "他大表哥",
+      "她大表哥"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "zont1x",
+    "aliases": [
+      "宗宗",
+      "宗宝宝",
+      "小宗宝宝"
+    ],
+    "kind": "player",
+    "note": "Team Spirit 的 CS 选手。长得帅，弹幕用叠词「宗宗」戏仿饭圈女的口吻；经典用法「可是宗宗也🥺……太菜了吧😅」是先饭圈式护短、最后一句翻转吐槽他的发挥，「你不能骂宗宗呀……」是宠溺腔戏仿。",
+    "tags": [
+      "Team Spirit"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "爆了",
+    "aliases": [
+      "爆没爆",
+      "直播间爆了"
+    ],
+    "kind": "term",
+    "note": "主播或弹幕出现了激进、敏感的言论（或者能往那边联想的），比如影射社会问题、政治、社区冲突，弹幕就刷「爆了」，衍生出「真爆假爆」「爆了是觉醒者」等元梗。C4 爆炸的字面义也会用。聊天中可以用「爆了爆了」轻轻带过敏感话题，但绝不展开敏感内容本身。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "波哈",
+    "aliases": [],
+    "kind": "term",
+    "note": "葡萄牙语脏话（porra）的音译，南美选手比赛中常喊，观众用「波哈」代指南美（巴西等）选手和队伍。FURIA 是波哈队里最有名的，不是「小众波哈队」（小众波哈队说的是名气小的南美队）。常和别的梗拼接（「波哈基米」= 波哈 + 哈基米）。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "MBTI",
+    "aliases": [
+      "mbti"
+    ],
+    "kind": "term",
+    "note": "VCT CN（瓦洛兰特国内联赛）最近在赛前展示选手 MBTI。直播间观众看不上 MBTI 这种标签化、轻浮的话题，也顺带敲打不喜欢的瓦洛兰特：「赛前没有选手 MBTI，好业余的比赛」是反讽；「MBTI 又是哪个波哈队」是因为 MBTI 和南美战队 MIBR 字形相似，故意当成又一个南美队。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "三箱",
+    "aliases": [
+      "波士顿三箱"
+    ],
+    "kind": "term",
+    "note": "2018 波士顿 Major 决赛，炼狱小镇 B 点的三箱点位：Stewie2k 在这里守住关键一分，NiKo 所在队伍之后一泻千里、痛失冠军。是 NiKo「软脚虾」叙事的起点。",
+    "tags": [
+      "NiKo"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "m0NESY",
+    "aliases": [
+      "孩孩",
+      "monesy"
+    ],
+    "kind": "player",
+    "note": "俄罗斯籍 CS 狙击手，现效力 Falcons，与 NiKo 同队。直播间常叫「孩孩」，有「尼尼💚孩孩」这类组合梗。",
+    "tags": [
+      "m0NESY"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "Falcons",
+    "aliases": [
+      "猎鹰",
+      "猎小鹰",
+      "falcon"
+    ],
+    "kind": "team",
+    "note": "Team Falcons，沙特 CS 战队，NiKo、m0NESY 所在。「猎小鹰」是饭圈化的叫法。",
+    "tags": [
+      "Falcons"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "donk",
+    "aliases": [
+      "小驴",
+      "小驴宝宝"
+    ],
+    "kind": "player",
+    "note": "俄罗斯籍 CS 选手，Team Spirit 核心步枪手。直播间叫他「小驴」。",
+    "tags": [
+      "Donk",
+      "Team Spirit"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "device",
+    "aliases": [
+      "电子哥",
+      "地外丝",
+      "狄外思"
+    ],
+    "kind": "player",
+    "note": "丹麦 CS 狙击手。「地外丝/狄外思」是名字谐音；直播间有大量模仿解说腔调调侃他关键局失误的长复读。",
+    "tags": [
+      "device"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "ZywOo",
+    "aliases": [
+      "zywoo",
+      "载物"
+    ],
+    "kind": "player",
+    "note": "法国 CS 狙击手，Vitality 核心。「载物」是名字谐音。",
+    "tags": [
+      "Zywoo"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "玩机器",
+    "aliases": [
+      "Machine",
+      "机器",
+      "玩神",
+      "玩大哥",
+      "玩宝宝",
+      "玩畜",
+      "玩鸡器",
+      "主播",
+      "6657",
+      "玩÷",
+      "玩除"
+    ],
+    "kind": "streamer",
+    "note": "斗鱼 CS 主播，英文名 Machine，直播间房号 6657。弹幕文化以「喷主播」为乐：他有点胖、还在继续变胖，所以被叫猪（熟食、烤猪、猪圈系列）；「玩畜」也写作「玩÷」（÷ 读「除」，谐音「畜」，用来躲屏蔽）。他给直播间开了弹幕发言等级限制，被戏称独裁、滥权。他「孝」的对象：device、Twistzz、NiKo 和 Falcons。属于圈内玩笑，可以按弹幕尺度喷。",
+    "tags": [
+      "喷玩机器"
+    ],
+    "exclude": [
+      "机器学习",
+      "机器人",
+      "机器翻译",
+      "洗衣机器",
+      "机器视觉",
+      "机器码",
+      "machine learning",
+      "virtual machine",
+      "time machine",
+      "slot machine"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "木柜子",
+    "aliases": [
+      "mygo",
+      "MyGO",
+      "春日影"
+    ],
+    "kind": "fandom",
+    "note": "「木柜子」是动画《BanG Dream! It's MyGO!!!!!》的谐音外号，也指这部作品的粉丝。直播间有大量 MyGO / Ave Mujica 角色梗，「春日影」是剧中关键曲目。",
+    "tags": [
+      "木柜子"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "丰川祥子",
+    "aliases": [
+      "祥子",
+      "小祥",
+      "saki酱",
+      "祥➗"
+    ],
+    "kind": "character",
+    "note": "MyGO / Ave Mujica 角色。直播间梗多围绕她退团拆队、当客服、「破防」等剧情。",
+    "tags": [
+      "丰川祥子",
+      "木柜子"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "瓦学弟",
+    "aliases": [
+      "瓦批",
+      "瓦爷",
+      "vctcn"
+    ],
+    "kind": "scene",
+    "note": "调侃《无畏契约》(Valorant) 玩家或国内赛区 (VCT CN) 的叫法，常与 CS 玩家「go学长」互相嘲讽。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "go学长",
+    "aliases": [
+      "go批",
+      "cncs"
+    ],
+    "kind": "scene",
+    "note": "CS 玩家的自嘲/被嘲叫法；cncs 指中国 CS 圈和战队。常拿国内队伍外战成绩互相调侃。",
+    "tags": [
+      "赛事梗"
+    ],
+    "status": "verified"
+  },
+  {
+    "canonical": "弹幕等级",
+    "aliases": [
+      "发言等级",
+      "等级限制"
+    ],
+    "kind": "term",
+    "note": "弹幕里常简称「等级」。登山事件之后，因为弹幕环境恶劣，玩机器在斗鱼开了粉丝牌发言 21 级限制，为了控制弹幕数量、提高弹幕质量、减少低龄和带节奏的弹幕，被观众戏称为独裁、滥权。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "黏",
+    "aliases": [
+      "胶水",
+      "粘稠",
+      "黏住",
+      "我黏"
+    ],
+    "kind": "term",
+    "note": "形容比赛十分焦灼、难分胜负（「像 FaZe 一样粘稠」「@karrigan：我黏，我再黏」）。也带性暗示的含义，这层不要用。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "孝",
+    "aliases": [],
+    "kind": "term",
+    "exclude": [
+      "孝顺",
+      "孝心",
+      "孝敬父母",
+      "不孝"
+    ],
+    "note": "某队伍或选手的粉丝表现出支持，被其他粉丝戏称为「孝」（孝敬，职业选手是你爹）。玩机器自己「孝」的是 device、Twistzz、NiKo 和 Falcons。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "心理委员",
+    "aliases": [],
+    "kind": "term",
+    "note": "来自中文互联网的固定句式，现在不太火了：「彳亍，心理委员来了。不哭不哭，抽X🚬……」，用在某队某选手输了之后，假装安慰、实际起哄。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "测谎仪",
+    "aliases": [],
+    "kind": "term",
+    "tags": [
+      "测谎仪"
+    ],
+    "note": "8 月 19 日 ESL 官方社媒发了 apEX 和 NiKo 互相问答、用测谎仪测谎的娱乐视频，很有看点。之后弹幕用「测谎仪：😅」戳穿嘴硬（「我：可是宗宗也很厉害啊🥺 测谎仪：😅」）；device 也被谐音成「设备」拿来玩。",
+    "status": "verified"
+  },
+  {
+    "canonical": "咬人猫",
+    "aliases": [
+      "咬人猫姐姐"
+    ],
+    "kind": "term",
+    "note": "玩机器喜欢的 B 站舞蹈区 UP 主。观众拿她造黄谣——不要参与，提到时最多说她是主播喜欢的舞区 UP。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "登山",
+    "aliases": [
+      "登山事件",
+      "将登太行",
+      "欲渡黄河冰塞川"
+    ],
+    "kind": "term",
+    "note": "玩机器停播 / 断播的代称。出自他下播后在斗鱼鱼吧发的整理心绪的文章：「欲渡黄河冰塞川，将登太行雪满山」，原本表达真实的痛苦，后来被观众拿来说笑。最出名的一次是 2025 年 2 月：Twistzz 宫斗爆料当晚弹幕攻击 Twistzz，他批评观众后下播，次日道歉并停播约一个月，复播后开了弹幕等级限制。常用来调侃主播停播、鸽了。",
+    "tags": [],
+    "status": "verified",
+    "ambiguous": [
+      "登山"
+    ],
+    "requires_any": [
+      "机器",
+      "玩神",
+      "玩大哥",
+      "玩÷",
+      "玩畜",
+      "主播",
+      "6657",
+      "下播",
+      "停播",
+      "复播",
+      "开播",
+      "直播",
+      "宫监",
+      "总监",
+      "twistzz",
+      "鱼吧"
+    ]
+  },
+  {
+    "canonical": "汗还是尿",
+    "aliases": [
+      "是汗还是尿",
+      "全都是尿"
+    ],
+    "kind": "term",
+    "note": "出自玩机器自己的解说名句：「Staehr 你的裤裆里是尿还是汗啊，我的天啊，是尿，全都是尿啊」。之后被做成解说腔模板，移植到 device、王楚钦、木柜子角色等各种对象上。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "这局没有人类了",
+    "aliases": [
+      "没有人类了",
+      "这是人类啊"
+    ],
+    "kind": "term",
+    "note": "玩机器的解说名句，形容选手表现离谱（太强或太烂），后被大量复读和移植（「啊 device，这是人类啊」）。",
+    "tags": [],
+    "status": "verified"
+  }
+]
