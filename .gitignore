@@ -1,5 +1,8 @@
-# 数据：烂梗原文来自 sb6657 社区，不要提交到公开仓库
-data/
+# 数据：弹幕库、合成数据、训练集都不提交；只提交人工打标后的金标
+data/*
+!data/gold/
+data/gold/*
+!data/gold/labels.jsonl
 logs/
 outputs/
 output/
@@ -23,3 +26,6 @@ kb/style_card.generated.md
 kb/blocklist.local.txt
 # 机器草稿，含未审核的弹幕原文和真实姓名，不提交
 kb/glossary.todo.md
+
+# 打标页源码（发布在 claude.ai，只在本地保留）
+tools/

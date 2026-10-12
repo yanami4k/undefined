@@ -5,6 +5,7 @@
 卡片在 data/label_cards/<批次目录>/<id>.json（发到打标页的原样内容），
 标注由 ArtifactData 导出为 <labels>/<id>.json（{"data": {"verdict", "reasons", "at"}}）。
 输出 data/gold/labels.jsonl：每条 {id, batch, kind, source, user, reply, verdict, reasons}。
+这是 data/ 下唯一提交到仓库的文件，每次打标合并后一起提交。
 没打标的卡片不写入；已经从打标页删掉、但留有标注的卡片照样保留。
 """
 
