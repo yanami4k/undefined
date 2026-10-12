@@ -26,7 +26,7 @@ kb/.*.jsonl
 kb/.templates_raw.txt
 kb/style_card.generated.md
 
-# 隐私：真实姓名等屏蔽片段只放本地
+# 隐私：不适合公开的屏蔽片段只放本地
 kb/blocklist.local.txt
 # 机器草稿，含未审核的弹幕原文和真实姓名，不提交
 kb/glossary.todo.md

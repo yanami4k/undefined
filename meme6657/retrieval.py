@@ -82,7 +82,7 @@ def load_aliases(path: Path = ALIASES_PATH, include_candidates: bool = False) ->
 
 
 def load_blocklist(path: Path = KB_DIR / "blocklist.txt") -> list[str]:
-    """屏蔽片段：blocklist.txt（提交）+ 同目录的 blocklist.local.txt（不提交：真实姓名等隐私信息）。"""
+    """屏蔽片段：blocklist.txt（提交）+ 同目录的 blocklist.local.txt（不提交：不适合公开的隐私片段）。"""
     words = []
     for p in (path, path.with_name(f"{path.stem}.local{path.suffix}")):
         if p.exists():
