@@ -43,7 +43,7 @@ swift sft \
   --warmup_ratio 0.05 \
   --eval_steps 50 \
   --save_steps 50 \
-  --save_total_limit 3 \
+  --save_total_limit 6 \
   --logging_steps 5 \
   --dataloader_num_workers 4 \
   --output_dir "$OUTPUT_DIR" \
