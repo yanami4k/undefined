@@ -1,8 +1,12 @@
-# 数据：弹幕库、合成数据、训练集都不提交；只提交人工打标后的金标
+# 数据：弹幕库、合成数据都不提交；只提交人工打标后的金标和由它组装的训练集
 data/*
 !data/gold/
 data/gold/*
 !data/gold/labels.jsonl
+!data/sft/
+data/sft/*
+!data/sft/train.jsonl
+!data/sft/val.jsonl
 logs/
 outputs/
 output/
