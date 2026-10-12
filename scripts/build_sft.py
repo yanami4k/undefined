@@ -8,7 +8,7 @@
 - 正常回复（normal）：用当前清理规则再过一遍（去掉颜文字、结尾主动推话题的那句），引用的弹幕片段原样保留
 用户消息按线上推理的格式附 [参考梗]（同一个检索器）。接梗样本以 --inject 的概率把目标弹幕放进 [参考梗]，
 让学生既学会背梗，也学会从参考里原样取用；其余样本保持检索的自然结果。
-原样搬来的弹幕回复命中屏蔽词的丢弃（安全兜底）。
+原样搬来的弹幕回复命中屏蔽词的丢弃（安全兜底）；过期梗（kb/expired_memes.json）也剔掉。
 
 输出 data/sft/train.jsonl 和 data/sft/val.jsonl，格式为 ms-swift 自定义数据集的 {"messages": [...]}，
 按用户消息划分，同一条消息的样本不会同时出现在 train 和 val。
@@ -25,7 +25,7 @@ from collections import Counter
 from meme6657.config import DATA_DIR
 from meme6657.jobs import read_jsonl, stable_hash, write_jsonl
 from meme6657.prompts import STUDENT_SYSTEM, format_user
-from meme6657.retrieval import Context, Meme, Retriever, load_blocklist
+from meme6657.retrieval import Context, Meme, Retriever, is_expired, load_blocklist, load_expired
 
 GOLD_PATH = DATA_DIR / "gold" / "labels.jsonl"
 SFT_DIR = DATA_DIR / "sft"
@@ -89,6 +89,7 @@ def main() -> None:
     by_text = {m.text: m for m in retriever.memes}
     index = MemeIndex([m.text for m in retriever.memes])
     blocklist = load_blocklist()
+    expired = load_expired()
 
     gold = [r for r in read_jsonl(GOLD_PATH) if r["verdict"] in ("good", "wave")]
     samples, stats, dropped, no_persona = [], Counter(), [], 0
@@ -98,6 +99,9 @@ def main() -> None:
         # 「袜子一湿」这种字面命中不该丢，所以只查原样搬来的弹幕
         if r["kind"] != "normal" and any(b in reply.lower() for b in blocklist):
             dropped.append(r["id"])
+            continue
+        if is_expired(reply + r.get("source", ""), expired):  # 梗的前提已经变了（见 kb/expired_memes.json）
+            stats["过期梗剔除"] += 1
             continue
         ctx = retriever.retrieve(user)
         if r["kind"] == "normal":
@@ -131,7 +135,7 @@ def main() -> None:
     print("来源：", {k: v for k, v in sorted(stats.items()) if "/" in k})
     print(f"去重前接梗 {kinds['接梗']} 条（电波加权后 {weighted_meme}），正常回复 {kinds['normal']} 条，"
           f"正常回复占比 {kinds['normal'] / max(1, weighted_meme + kinds['normal']):.0%}")
-    print(f"接梗样本里注入目标弹幕 {stats['注入目标弹幕']} 条；屏蔽词丢弃 {len(dropped)} 条 {dropped[:5]}；"
+    print(f"过期梗剔除 {stats['过期梗剔除']} 条；接梗样本里注入目标弹幕 {stats['注入目标弹幕']} 条；屏蔽词丢弃 {len(dropped)} 条 {dropped[:5]}；"
           f"清理后缺人设标记的正常回复 {no_persona} 条")
     print(f"总字符约 {chars / 1e4:.1f} 万（不含系统提示词）")
 

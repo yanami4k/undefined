@@ -81,6 +81,18 @@ def load_aliases(path: Path = ALIASES_PATH, include_candidates: bool = False) ->
     return [e for e in entries if include_candidates or e.status == "verified"]
 
 
+def load_expired(path: Path = KB_DIR / "expired_memes.json") -> list[str]:
+    """过期梗的特征片段（梗的前提已经变了，例如 NiKo 已经拿到 Major），小写。"""
+    if not path.exists():
+        return []
+    return [e["match"].lower() for e in json.loads(path.read_text(encoding="utf-8")) if e.get("match")]
+
+
+def is_expired(text: str, expired: list[str]) -> bool:
+    low = text.lower()
+    return any(m in low for m in expired)
+
+
 def load_blocklist(path: Path = KB_DIR / "blocklist.txt") -> list[str]:
     """屏蔽片段：blocklist.txt（提交）+ 同目录的 blocklist.local.txt（不提交：不适合公开的隐私片段）。"""
     words = []
@@ -126,7 +138,8 @@ class Retriever:
 
     @classmethod
     def from_files(cls, **kw) -> "Retriever":
-        return cls(load_memes(), load_aliases(), load_blocklist(), **kw)
+        # 屏蔽片段和过期梗都不进索引
+        return cls(load_memes(), load_aliases(), load_blocklist() + load_expired(), **kw)
 
     # ------------------------------------------------------------ aliases
 

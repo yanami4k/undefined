@@ -11,7 +11,7 @@
       "虾钳"
     ],
     "kind": "player",
-    "note": "波黑籍 CS 选手，现效力 Falcons，国内人气极高。「虾」系外号源自「软脚虾」（大场面容易发挥失常）：起点是 2018 波士顿 Major 决赛，炼狱小镇 B 点三箱被 Stewie2k 守住关键一分，之后一泻千里、与冠军失之交臂，此后多次 Major 决赛失利。他反过来打赢强队叫「虾钳反夹」。语气是又爱又恨的调侃。注意：「逮虾户」不是他，是专赢他的对手。",
+    "note": "波黑籍 CS 选手，现效力 Falcons，国内人气极高。「虾」系外号源自「软脚虾」（大场面容易发挥失常）：起点是 2018 波士顿 Major 决赛，炼狱小镇 B 点三箱被 Stewie2k 守住关键一分，之后一泻千里、与冠军失之交臂，此后多次 Major 决赛失利。他反过来打赢强队叫「虾钳反夹」。语气是又爱又恨的调侃。注意：「逮虾户」不是他，是专赢他的对手。现在在 Falcons，已经拿到 Major 冠军：拿他无冠、决赛史开涮的梗（荣誉同意、Niko 梦碎盘点、永不言弃写进作文）过期了，别再用（见 kb/expired_memes.json）；比赛里手软、腿发抖这类单场的梗照常。",
     "tags": [
       "NiKo"
     ],
@@ -446,6 +446,57 @@
     "exclude": [],
     "ambiguous": [],
     "requires_any": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "ropz",
+    "aliases": [
+      "肉铺子"
+    ],
+    "kind": "player",
+    "note": "CS 选手，现在在 Team Vitality 打自由人。解说莱昂凯念他的 ID 发音像「肉铺子」，弹幕就这么叫，常模仿那句「看这一波肉铺子能架住吗😴，哇他架住了😴」。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "莱昂凯",
+    "aliases": [],
+    "kind": "caster",
+    "note": "CS 赛事解说。把 ropz 念成「肉铺子」，弹幕常模仿他的解说腔（「哇肉铺子😴」）。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "magisk",
+    "aliases": [
+      "魔男"
+    ],
+    "kind": "player",
+    "note": "CS 选手，弹幕叫他「魔男」。曾转会到 Falcons 和 NiKo、m0NESY 一起打（弹幕叫「银河战舰」），现在已经转走；绑定那段阵容的梗（「魔男来组银河战舰」「niko小孩二选一」）过期了。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "dupreeh",
+    "aliases": [
+      "阿杜",
+      "dupree"
+    ],
+    "kind": "player",
+    "note": "Astralis 王朝时期的选手，已经退役。不要把他当现役选手聊（「玩机器看到阿杜半场0杀」这种场面不会再有）。",
+    "tags": [],
+    "status": "verified"
+  },
+  {
+    "canonical": "哈登",
+    "aliases": [
+      "登哥",
+      "James Harden",
+      "Harden"
+    ],
+    "kind": "person",
+    "note": "NBA 球员詹姆斯·哈登，火箭时期最出名，没拿过总冠军。弹幕以前常把他和 NiKo 并列当「无冠」代表（「哈登梦碎 XX」「Niko 梦碎 XX Major」）；NiKo 已经夺冠，这类并列的梗过期了，单独拿哈登开涮的照常。",
+    "tags": [],
     "status": "verified"
   }
 ]

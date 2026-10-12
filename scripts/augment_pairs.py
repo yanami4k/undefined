@@ -22,7 +22,7 @@ from meme6657.config import DATA_DIR
 from meme6657.jobs import read_jsonl, run_parallel
 from meme6657.llm import LLM
 from meme6657.prompts import load_taste
-from meme6657.retrieval import Retriever
+from meme6657.retrieval import Retriever, is_expired, load_expired
 from scripts.match_synth import REACTIONS_PATH, Families, is_echo
 
 GOLD_PATH = DATA_DIR / "gold" / "labels.jsonl"
@@ -40,6 +40,7 @@ PROMPT = """{taste}
 
 请写 {n} 条新的用户消息：真实用户在同一种情境下可能发的话，而且上面这条回复原样接上去同样成立。
 - 情境和动作不变：用户此刻在干什么、什么情绪、冲着谁说。换说法、换细节、换长短和语气，{n} 条彼此也要不一样
+- 句式不变：原句是吐槽、发泄、分享，新消息也是，别改成问句（尤其别改成问要不要、该不该、值不值得、是不是）——问句配电波梗就不对了
 - 回复的梗如果绑定了具体的人、队伍、事件（例如回复里点名的选手），新消息里这个对象必须保留，不能换
 - 用户事先不知道会被怎么接：不要在消息里提前用回复里的梗词，不要往梗上撞
 - 符合用户画像：单聊或 QQ 群里跟 AI 说话；游戏只聊 CS2、DOTA2、二游；说到的事实要对，不编不存在的梗
@@ -82,7 +83,7 @@ def main() -> None:
     # 只扩原始样本：变体（batch 以 aug 开头）不再拿来扩，已经扩过的原样本也跳过；变体照样计入梗族上限
     done = {r["id"].split("-", 1)[1].rsplit("-a", 1)[0] for r in gold if r["batch"].startswith("aug")}
     pairs = [r for r in kept if not r["batch"].startswith("aug") and r["id"] not in done
-             and "meme_ask_unknown" not in r["id"]]  # 问编出来的梗这类用户消息本身是坏数据，不扩
+             and "meme_ask_unknown" not in r["id"] and not is_expired(r.get("source", ""), load_expired())]  # 问编出来的梗这类用户消息本身是坏数据，不扩
     rng = random.Random(args.seed)
     if args.sample:
         pairs = rng.sample(pairs, min(args.sample, len(pairs)))

@@ -78,3 +78,15 @@ def test_load_blocklist_merges_local_file(tmp_path):
     assert load_blocklist(tmp_path / "blocklist.txt") == ["袜子", "某真名"]
     (tmp_path / "blocklist.local.txt").unlink()
     assert load_blocklist(tmp_path / "blocklist.txt") == ["袜子"]
+
+
+def test_expired_memes_excluded(tmp_path):
+    import json
+    from meme6657.retrieval import Meme, Retriever, is_expired, load_expired
+    p = tmp_path / "expired.json"
+    p.write_text(json.dumps([{"match": "niko梦碎", "reason": "已夺冠"}], ensure_ascii=False), encoding="utf-8")
+    expired = load_expired(p)
+    assert is_expired("男人一年只哭三次：Niko梦碎上半年major", expired)
+    assert not is_expired("NiKo（👀12-6❓❗）🦐腿开始发抖", expired)
+    r = Retriever([Meme(1, "Niko梦碎波士顿Major"), Meme(2, "NiKo腿开始发抖")], [], expired)
+    assert [m.text for m in r.memes] == ["NiKo腿开始发抖"]

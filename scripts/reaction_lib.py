@@ -15,6 +15,7 @@ from collections import defaultdict
 
 from meme6657.config import DATA_DIR
 from meme6657.jobs import read_jsonl
+from meme6657.retrieval import is_expired, load_expired
 
 GOLD_PATH = DATA_DIR / "gold" / "labels.jsonl"
 OUT_PATH = DATA_DIR / "gold" / "reactions.json"
@@ -22,8 +23,9 @@ OUT_PATH = DATA_DIR / "gold" / "reactions.json"
 
 def build(min_rate: float = 0.4, min_count_for_drop: int = 3) -> list[dict]:
     by_source: dict[str, list[dict]] = defaultdict(list)
+    expired = load_expired()
     for g in read_jsonl(GOLD_PATH):
-        if g["kind"] == "meme":
+        if g["kind"] == "meme" and not is_expired(g["source"], expired):
             by_source[g["source"]].append(g)
     lib = []
     for source, gs in by_source.items():

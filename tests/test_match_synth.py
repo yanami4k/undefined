@@ -37,3 +37,4 @@ def test_augment_filters():
     assert keeps_hook("你是不是被降智了啊", "降智", "AI你说实话，你是不是被降智了")
     assert not keeps_hook("你最近怎么这么笨了", "降智", "AI你说实话，你是不是被降智了")
     assert keeps_hook("随便什么", "不在原句里的词", "原句")
+
