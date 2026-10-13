@@ -18,8 +18,9 @@ EPOCHS=${EPOCHS:-3}
 LR=${LR:-1e-4}
 LORA_RANK=${LORA_RANK:-16}
 MAX_LENGTH=${MAX_LENGTH:-4096}
-# 混入通用中文指令数据，比例约为风格数据的 40%，防止模型「只会玩梗」
-GENERAL_RATIO=${GENERAL_RATIO:-0.4}
+# 混入通用中文指令数据的比例（相对风格数据的条数）。默认不混：alpaca-gpt4 的回答又长又爱分点列，
+# eval-v0 里长篇求助回复大多被判为不好。担心模型「只会玩梗」时用 GENERAL_RATIO=0.1 之类少量打开
+GENERAL_RATIO=${GENERAL_RATIO:-0}
 
 N_TRAIN=$(wc -l < "$DATA_DIR/train.jsonl")
 N_GENERAL=$(python -c "print(int($N_TRAIN * $GENERAL_RATIO))")

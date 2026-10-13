@@ -5,7 +5,9 @@
 
 数据来源 data/gold/labels.jsonl，只取 good / wave，且只取下面三种类型（评估卡片 eval 打完分也会进金标，但不能进训练集）：
 - 接梗（meme / template）：回复是原样的弹幕，不做任何清理；电波样本重复 --wave-weight 次加权
-- 正常回复（normal）：用当前清理规则再过一遍（去掉颜文字、结尾主动推话题的那句），引用的弹幕片段原样保留
+- 正常回复（normal）：用当前清理规则再过一遍（去掉颜文字、结尾主动推话题的那句），引用的弹幕片段原样保留；
+  清理后超过 --max-normal-chars 字的不要。eval-v0 显示小模型学长回复既不讨喜又容易错，
+  长的原版已经由 scripts/shorten_replies.py 压短、重新打标，压短版作为同一条消息的样本进来
 用户消息按线上推理的格式附 [参考梗]（同一个检索器）。接梗样本以 --inject 的概率把目标弹幕放进 [参考梗]，
 让学生既学会背梗，也学会从参考里原样取用；其余样本保持检索的自然结果。
 原样搬来的弹幕回复命中屏蔽词的丢弃（安全兜底）；过期梗（kb/expired_memes.json）也剔掉。
@@ -90,6 +92,7 @@ def main() -> None:
     ap.add_argument("--wave-weight", type=int, default=2, help="电波样本重复的次数")
     ap.add_argument("--inject", type=float, default=0.5, help="接梗样本把目标弹幕放进 [参考梗] 的概率")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--max-normal-chars", type=int, default=60, help="正常回复清理后的长度上限，超过的不要")
     args = ap.parse_args()
 
     from scripts.normal_replies import MemeIndex, problems, strip_followup, tidy_tics  # 正常回复的清理规则
@@ -117,6 +120,9 @@ def main() -> None:
         if r["kind"] == "normal":
             memes = [m.text for m in retriever.search_memes(user, k=8) + retriever.search_memes(reply, k=8)]
             reply = strip_followup(tidy_tics(user, reply, memes, keep=index.quotes(user, reply)))
+            if len(reply) > args.max_normal_chars:
+                stats["正常回复过长剔除"] += 1
+                continue
             no_persona += bool(problems(user, reply, memes, "help", index.quotes(user, reply)))
         elif rng.random() < args.inject:
             target = by_text.get(r.get("source", "").strip())
@@ -145,7 +151,8 @@ def main() -> None:
     print("来源：", {k: v for k, v in sorted(stats.items()) if "/" in k})
     print(f"去重前接梗 {kinds['接梗']} 条（电波加权后 {weighted_meme}），正常回复 {kinds['normal']} 条，"
           f"正常回复占比 {kinds['normal'] / max(1, weighted_meme + kinds['normal']):.0%}")
-    print(f"过期梗剔除 {stats['过期梗剔除']} 条；接梗样本里注入目标弹幕 {stats['注入目标弹幕']} 条；屏蔽词丢弃 {len(dropped)} 条 {dropped[:5]}；"
+    print(f"超过 {args.max_normal_chars} 字的正常回复剔除 {stats['正常回复过长剔除']} 条；"
+          f"过期梗剔除 {stats['过期梗剔除']} 条；接梗样本里注入目标弹幕 {stats['注入目标弹幕']} 条；屏蔽词丢弃 {len(dropped)} 条 {dropped[:5]}；"
           f"清理后缺人设标记的正常回复 {no_persona} 条")
     print(f"总字符约 {chars / 1e4:.1f} 万（不含系统提示词）")
 
